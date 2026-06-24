@@ -2,7 +2,6 @@ const API_URL = "http://localhost:8080/api/usuarios";
 
 export const authService = {
   registro: async (nombre, apellido, email, password) => {
-    // CORREGIDO: Cambiamos /generate por /registro para que coincida con tu Java Controller
     const response = await fetch(`${API_URL}/registro`, { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
