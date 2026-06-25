@@ -17,17 +17,26 @@ public class Ticket {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
     @Column(nullable = false)
-    private String estado; // Abierto, En Proceso, Cerrado
+    private String estado; 
 
     @Column(nullable = false)
-    private String prioridad; // Baja, Media, Alta
+    private String prioridad; 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("tickets")
+    private Usuario usuario;
 
     @PrePersist
     protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
+        if (this.estado == null) {
+            this.estado = "Abierto";
+        }
     }
 
     // --- CONSTRUCTORES ---
@@ -51,4 +60,7 @@ public class Ticket {
 
     public String getPrioridad() { return prioridad; }
     public void setPrioridad(String prioridad) { this.prioridad = prioridad; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }

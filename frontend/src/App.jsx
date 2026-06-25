@@ -1,47 +1,63 @@
 import React, { useState } from 'react';
 import Login from './pages/Login';
 import Registro from './pages/Registro';
+import DashboardTickets from './pages/DashboardTickets'; // <-- IMPORTANTE: Falta importar esto
+import Perfil from './pages/Perfil';                     // <-- IMPORTANTE: Falta importar esto
 
 export default function App() {
-  // Estado para saber si hay un usuario logueado en el sistema
+  // 1. DECLARACIÓN DE TODOS LOS ESTADOS (Siempre arriba de todo)
   const [usuario, setUsuario] = useState(null);
-  // Estado para alternar la vista entre 'login' y 'registro'
   const [vistaActual, setVistaActual] = useState('login');
+  const [seccionActual, setSeccionActual] = useState('tickets'); 
 
-  // Función que se ejecuta cuando el Login de la API responde OK
+  // 2. FUNCIONES DE CONTROL
   const handleLoginSuccess = (usuarioLogueado) => {
     setUsuario(usuarioLogueado);
   };
 
-  // Función para cerrar sesión
   const handleLogout = () => {
     setUsuario(null);
     setVistaActual('login');
+    setSeccionActual('tickets');
   };
 
-  // 1. Si el usuario ya inició sesión con éxito, mostramos el Panel de Tickets
+  // 3. LOGICA DE RENDERIZADO
+  // Si el usuario ya inició sesión con éxito, mostramos el Panel Principal
   if (usuario) {
     return (
-      <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-          <h1>Sistema de Gestión de Tickets</h1>
-          <div>
-            <span style={{ marginRight: '15px' }}>Hola, <strong>{usuario.nombre} {usuario.apellido}</strong></span>
-            <button onClick={handleLogout} style={{ padding: '5px 10px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+      <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', minHeight: '100vh', background: '#121212', color: 'white' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
+          <h2>Sistema de Gestión de Tickets</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <span>Usuario: <strong>{usuario.nombre} {usuario.apellido}</strong></span>
+            
+            {/* Botón para cambiar de sección interna */}
+            <button onClick={() => setSeccionActual(seccionActual === 'tickets' ? 'perfil' : 'tickets')} style={{ padding: '6px 12px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+              {seccionActual === 'tickets' ? 'Mi Perfil' : 'Ver Tickets'}
+            </button>
+
+            <button onClick={handleLogout} style={{ padding: '6px 12px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
               Cerrar Sesión
             </button>
           </div>
         </header>
         
         <main style={{ marginTop: '20px' }}>
-          <h3>Panel de Control (Próximo paso: CRUD de Tickets)</h3>
-          <p>Aquí listaremos, crearemos y editaremos los tickets relacionales de PostgreSQL.</p>
+          {seccionActual === 'tickets' ? (
+            <DashboardTickets usuario={usuario} />
+          ) : (
+            <Perfil 
+              usuario={usuario} 
+              onPerfilActualizado={(u) => setUsuario(u)} 
+              onVolver={() => setSeccionActual('tickets')} 
+            />
+          )}
         </main>
       </div>
     );
   }
 
-  // 2. Si no está logueado, mostramos Login o Registro según corresponda
+  // Si no está logueado, mostramos Login o Registro según corresponda
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       {vistaActual === 'login' ? (

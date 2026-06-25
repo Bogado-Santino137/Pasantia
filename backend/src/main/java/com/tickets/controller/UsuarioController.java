@@ -35,4 +35,15 @@ public class UsuarioController {
         }
         return ResponseEntity.status(401).body("Credenciales inválidas");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarPerfil(@PathVariable Long id, @RequestBody Usuario usuarioDatos) {
+        try {
+            Usuario usuarioActualizado = usuarioService.modificarPerfil(id, usuarioDatos);
+            return ResponseEntity.ok(usuarioActualizado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

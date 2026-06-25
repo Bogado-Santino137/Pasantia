@@ -25,6 +25,21 @@ public class UsuarioService {
 
     public Optional<Usuario> iniciarSesion(String email, String password) {
         return usuarioRepository.findByEmail(email)
-                .filter(u -> u.getPassword().equals(password)); // Validación de texto plano por ahora
+        .filter(u -> u.getPassword().equals(password)); // Validación de texto plano por ahora
+    }
+        public Usuario modificarPerfil(Long id, Usuario datosActualizados) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        usuario.setNombre(datosActualizados.getNombre());
+        usuario.setApellido(datosActualizados.getApellido());
+        usuario.setEmail(datosActualizados.getEmail());
+        
+        // Si el usuario envía una nueva contraseña, la actualizamos
+        if (datosActualizados.getPassword() != null && !datosActualizados.getPassword().isEmpty()) {
+            usuario.setPassword(datosActualizados.getPassword());
+        }
+        return usuarioRepository.save(usuario);
     }
 }
+
