@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
-// @CrossOrigin(origins = "*") // ¡Crucial! Permite que React se conecte sin trabas de CORS
 public class UsuarioController {
 
     private final UsuarioService usuarioService;

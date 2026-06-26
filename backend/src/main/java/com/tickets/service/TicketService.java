@@ -51,4 +51,12 @@ public class TicketService {
         ticket.setEstado("Cerrado");
         return ticketRepository.save(ticket);
     }
+
+    // AGREGADO EXPLICITO PARA DAR SOPORTE AL BOTÓN ELIMINAR POR URL DINÁMICA
+    public void eliminarTicket(Long id) {
+        if (!ticketRepository.existsById(id)) {
+            throw new RuntimeException("No se puede eliminar: El ticket no existe");
+        }
+        ticketRepository.deleteById(id);
+    }
 }

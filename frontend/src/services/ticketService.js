@@ -1,13 +1,15 @@
 const API_URL = "http://localhost:8080/api/tickets";
 
 export const ticketService = {
-  listar: async (estado = "") => {
+    listar: async (estado = "") => {
     let url = API_URL;
     if (estado) url += `?estado=${estado}`;
+    
     const response = await fetch(url);
     if (!response.ok) throw new Error("Error al obtener los tickets");
     return response.json();
   },
+
 
   crear: async (titulo, descripcion, prioridad, usuarioId) => {
     const response = await fetch(`${API_URL}/usuario/${usuarioId}`, {
@@ -36,5 +38,13 @@ export const ticketService = {
     });
     if (!response.ok) throw new Error("Error al cerrar el ticket");
     return response.json();
+  },
+
+  eliminar: async (id) => {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE" // Mandamos el verbo DELETE con el ID dinámico al final
+    });
+    if (!response.ok) throw new Error("Error al eliminar el ticket");
+    return response.text(); // Devuelve el texto de confirmación
   }
 };

@@ -11,7 +11,7 @@ export default function Login({ onLoginSuccess }) {
     setError('');
     try {
       const usuarioLogueado = await authService.login(email, password);
-      alert(`¡Bienvenido/a ${usuarioLogueado.nombre}!`);
+      //alert(`¡Bienvenido/a ${usuarioLogueado.nombre}!`);
       if (onLoginSuccess) onLoginSuccess(usuarioLogueado);
     } catch (err) {
       setError(err.message);
